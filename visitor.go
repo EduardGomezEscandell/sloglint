@@ -37,7 +37,13 @@ func (v *Visitor) Visit(node ast.Node) ast.Visitor {
 		return v
 	}
 
-	packageName := f.X.(*ast.Ident).Name
+	id, ok := f.X.(*ast.Ident)
+	if !ok {
+		// Some other selector, for instance getObject().method()
+		return v
+	}
+
+	packageName := id.Name
 	funcName := f.Sel.Name
 
 	if packageName != "slog" {
