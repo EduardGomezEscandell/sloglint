@@ -6,27 +6,20 @@ import (
 )
 
 func main() {
-	slog.Info("This call is ill-formed", "bad!")
 
-	var c http.Client
-	slog.Warn("Hello, world", c, "bad!")
+	// Not yet supported: false positive
+	slog.Info("Hello", slog.Bool("Success", true))
 
-	var t MyType
-	slog.Debug("Hello, world", t.field, "bad!!!")
+	slog.Info("This call is ill-formed", "I'm missing my arg :(")
 
-	slog.Info("Hello, world", getString(), "bad!")
+	slog.Warn("This call is ill-formed", 13, "bad!")
 
-	slog.Debug("Hello, world", 3*5, "bad!")
+	slog.Info("This call is well-formed", getString(), "Good!")
 
-	slog.Info("This call is well-formed", "status", "good!")
-
-	slog.Debug("This call is well-formed", http.Client{}, "good!")
+	// This is a false negative :(
+	slog.Debug("This call is ill-formed", http.Client{}, "good!")
 }
 
 func getString() string {
 	return "hello, world"
-}
-
-type MyType struct {
-	field int
 }
