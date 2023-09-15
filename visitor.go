@@ -4,7 +4,14 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
+	"slices"
 )
+
+var logFunctions = []string{
+	"Info",
+	"Debug",
+	"Warn",
+}
 
 type Visitor struct {
 	Analyser
@@ -47,6 +54,10 @@ func (v *Visitor) Visit(node ast.Node) ast.Visitor {
 	funcName := f.Sel.Name
 
 	if packageName != "slog" {
+		return v
+	}
+
+	if !slices.Contains(logFunctions, funcName) {
 		return v
 	}
 
